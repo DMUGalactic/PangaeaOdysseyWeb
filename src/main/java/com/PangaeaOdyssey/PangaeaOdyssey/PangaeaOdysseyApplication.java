@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PangaeaOdysseyApplication {
 
 	public static void main(String[] args) {SpringApplication.run(PangaeaOdysseyApplication.class, args);
-		System.out.println("hello world!");
 	}
 
 }
