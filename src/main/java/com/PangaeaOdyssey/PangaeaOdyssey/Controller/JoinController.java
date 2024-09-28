@@ -19,7 +19,6 @@ public class JoinController {
 
     @PostMapping("/join")
     public ResponseEntity<String> joinProcess(@RequestBody JoinDTO joinDTO) {
-        System.out.println("Received Email: " + joinDTO.getEmail()); // 로그 출력
         try {
             joinService.joinProcess(joinDTO);
             return ResponseEntity.ok("Registration successful");
