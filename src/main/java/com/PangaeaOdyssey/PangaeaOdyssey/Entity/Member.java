@@ -1,6 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Entity;
 
-import com.PangaeaOdyssey.PangaeaOdyssey.Authority;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

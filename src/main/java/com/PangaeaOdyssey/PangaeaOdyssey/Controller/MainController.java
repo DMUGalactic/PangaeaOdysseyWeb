@@ -25,4 +25,8 @@ public class MainController {
 
         return "main success" + username + " " + role;
     }
+    @GetMapping("/my")
+    public String myAPI(){
+        return "myRoot";
+    }
 }

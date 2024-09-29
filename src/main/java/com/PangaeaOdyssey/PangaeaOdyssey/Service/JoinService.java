@@ -1,6 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Service;
 
-import com.PangaeaOdyssey.PangaeaOdyssey.Authority;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.JoinDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
@@ -22,7 +21,6 @@ public class JoinService {
         String email = joinDTO.getEmail();
         String filename = joinDTO.getFilename();
         String auth = joinDTO.getRole();
-        System.out.println("현재: "+auth);
 
         Boolean isExist = memberRepository.existsById(id);
 

@@ -1,6 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.jwt;
 
-import com.PangaeaOdyssey.PangaeaOdyssey.Authority;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.CustomUserDetails;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,7 +35,6 @@ public class JWTFilter extends OncePerRequestFilter {
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
-        System.out.println("authorization now");
         //Bearer 부분 제거 후 순수 토큰만
         String token = authorization.split(" ")[1];
 
@@ -60,14 +58,12 @@ public class JWTFilter extends OncePerRequestFilter {
         userEntity.setPassword("temppassword");
         //userEntity.setRole(); -> Authority라 안 들어가짐
         userEntity.setRole(role); // RoleEnum이 실제 enum 타입이라고 가정
-        System.out.println("JWTFilter클래스 setRole이 들어갔는지 확인: "+userEntity.getRole());
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        System.out.println("Checking if token is expired...");
         try {
             if (jwtUtil.isExpired(token)) {
                 System.out.println("token expired");
