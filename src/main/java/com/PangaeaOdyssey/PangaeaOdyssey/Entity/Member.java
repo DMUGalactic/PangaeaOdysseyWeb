@@ -1,6 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Entity;
 
-import com.PangaeaOdyssey.PangaeaOdyssey.Authority;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,11 +27,11 @@ public class Member {
     @Column
     private String filename;
 
-    @Enumerated(EnumType.STRING)
-    private Authority role;
+    @Column
+    private String role;
 
     @Builder
-    public Member(String id, String email, String password, String nickname, Authority role) {
+    public Member(String id, String email, String password, String nickname, String role) {
         this.id = id;
         this.email = email;
         this.password = password;
