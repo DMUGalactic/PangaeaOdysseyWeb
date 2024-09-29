@@ -1,6 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Service;
 
-import com.PangaeaOdyssey.PangaeaOdyssey.Authority;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.JoinDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
@@ -21,6 +20,7 @@ public class JoinService {
         String password = joinDTO.getPassword();
         String email = joinDTO.getEmail();
         String filename = joinDTO.getFilename();
+        String auth = joinDTO.getRole();
 
         Boolean isExist = memberRepository.existsById(id);
 
@@ -34,7 +34,7 @@ public class JoinService {
         data.setPassword(bCryptPasswordEncoder.encode(password));
         data.setEmail(email);
         data.setFilename(filename);
-        data.setRole(Authority.USER);
+        data.setRole(auth);
 
         memberRepository.save(data);
     }
