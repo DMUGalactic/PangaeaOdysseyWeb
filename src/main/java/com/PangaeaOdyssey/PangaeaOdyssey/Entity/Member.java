@@ -1,41 +1,53 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Entity;
 
+import com.PangaeaOdyssey.PangaeaOdyssey.Enum.Role;
+import com.PangaeaOdyssey.PangaeaOdyssey.Enum.SocialType;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Builder
+@AllArgsConstructor
 public class Member {
-
     @Id
     private String id;
-
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(unique = true)
-    private String nickname;
-
     @Column
-    private String filename;
-
+    private String email; // 이메일
     @Column
-    private String role;
+    private String password; // 비밀번호
+    @Column
+    private String nickname; // 닉네임
+    @Column
+    private String imageUrl; // 프로필 이미지
+    @Column
+    private int age;
+    @Column
+    private String city; // 사는 도시
 
-    @Builder
-    public Member(String id, String email, String password, String nickname, String role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.role = role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType; // KAKAO, NAVER, GOOGLE
+
+    private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
+
+    private String refreshToken; // 리프레시 토큰
+
+    // 유저 권한 설정 메소드
+    public void authorizeUser() {
+        this.role = Role.USER;
+    }
+
+    // 비밀번호 암호화 메소드
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
     }
 }
