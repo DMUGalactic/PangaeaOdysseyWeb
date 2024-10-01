@@ -13,7 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class Member {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long id;
     @Column
     private String email; // 이메일
     @Column
@@ -22,10 +24,6 @@ public class Member {
     private String nickname; // 닉네임
     @Column
     private String imageUrl; // 프로필 이미지
-    @Column
-    private int age;
-    @Column
-    private String city; // 사는 도시
 
     @Enumerated(EnumType.STRING)
     private Role role;

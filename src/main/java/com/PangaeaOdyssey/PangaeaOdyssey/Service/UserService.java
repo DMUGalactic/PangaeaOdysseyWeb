@@ -18,9 +18,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
-        if(memberRepository.findById(userSignUpDto.getId()).isPresent()){
-            throw new Exception("이미 존재하는 아이디입니다.");
-        }
         if (memberRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
