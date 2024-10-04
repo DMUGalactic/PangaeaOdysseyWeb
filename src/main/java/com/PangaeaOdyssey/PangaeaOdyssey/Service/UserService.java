@@ -6,9 +6,10 @@ import com.PangaeaOdyssey.PangaeaOdyssey.Enum.Role;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,5 +36,22 @@ public class UserService {
 
         user.passwordEncode(passwordEncoder);
         memberRepository.save(user);
+    }
+    @Transactional
+    public void logout(String refreshToken) {
+        memberRepository.findByRefreshToken(refreshToken)
+                .ifPresent(user -> {
+                    user.updateRefreshToken(null);  // Refresh Token을 무효화
+                    memberRepository.save(user);
+                });
+    }
+    public void updateUserRoleToUser(String email) {
+        memberRepository.findByEmail(email).ifPresent(user -> {
+            if (user.getRole() == Role.GUEST) {
+                user.authorizeUser();  // 역할을 USER로 변경
+                memberRepository.save(user);
+                log.info("사용자의 역할이 USER로 변경되었습니다. 이메일: {}", email);
+            }
+        });
     }
 }
