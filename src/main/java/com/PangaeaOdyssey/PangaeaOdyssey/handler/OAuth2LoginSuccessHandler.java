@@ -3,11 +3,13 @@ import com.PangaeaOdyssey.PangaeaOdyssey.Enum.Role;
 import com.PangaeaOdyssey.PangaeaOdyssey.Oauth2.CustomOAuth2User;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtService;
+import com.PangaeaOdyssey.PangaeaOdyssey.Service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -20,31 +22,40 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("OAuth2 Login 성공!");
+
         try {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-            // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
-            if(oAuth2User.getRole() == Role.GUEST) {
-                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
-                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-                response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+            // 사용자의 역할을 GUEST에서 USER로 변경
+            memberRepository.findByEmail(oAuth2User.getEmail()).ifPresent(user -> {
+                user.authorizeUser();  // 역할을 USER로 설정
+                memberRepository.save(user);
+                log.info("사용자의 역할이 USER로 변경되었습니다. 이메일: {}", oAuth2User.getEmail());
+            });
 
-                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-//                User findUser = userRepository.findByEmail(oAuth2User.getEmail())
-//                                .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
-//                findUser.authorizeUser();
-            } else {
-                loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
-            }
+            // Access Token 및 Refresh Token 발급
+            String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
+            String refreshToken = jwtService.createRefreshToken();
+
+            // 사용자 객체에 리프레시 토큰 저장
+            memberRepository.findByEmail(oAuth2User.getEmail()).ifPresent(user -> {
+                user.updateRefreshToken(refreshToken);
+                memberRepository.save(user);
+                log.info("리프레시 토큰이 사용자 객체에 저장되었습니다. 이메일: {}, 리프레시 토큰: {}", oAuth2User.getEmail(), refreshToken);
+            });
+
+            // Access Token 및 Refresh Token 응답 헤더에 추가
+            jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+            response.sendRedirect("/home");  // 홈 페이지로 리다이렉트
         } catch (Exception e) {
-            throw e;
+            log.error("OAuth2 로그인 성공 후 처리 중 오류 발생: {}", e.getMessage(), e);
+            throw new ServletException("로그인 후 처리 중 문제가 발생했습니다.", e);
         }
-
     }
 
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기

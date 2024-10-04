@@ -9,6 +9,7 @@ import com.PangaeaOdyssey.PangaeaOdyssey.handler.LoginSuccessHandler;
 import com.PangaeaOdyssey.PangaeaOdyssey.handler.OAuth2LoginFailureHandler;
 import com.PangaeaOdyssey.PangaeaOdyssey.handler.OAuth2LoginSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico","/index.html").permitAll()
                         .requestMatchers("/sign-up").permitAll() // 회원가입 접근 가능
+                        .requestMatchers("/login", "/oauth2/callback").permitAll() // 리디렉션 URI 허용
                         .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 )
                 .sessionManagement(session -> session
@@ -57,6 +59,13 @@ public class SecurityConfig {
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("로그아웃 성공");
+                        })
                 );
         // 필터 순서 설정
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
