@@ -4,10 +4,7 @@ import com.PangaeaOdyssey.PangaeaOdyssey.Service.CustomOAuth2UserService;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtAuthenticationProcessingFilter;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtService;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.LoginService;
-import com.PangaeaOdyssey.PangaeaOdyssey.handler.LoginFailureHandler;
-import com.PangaeaOdyssey.PangaeaOdyssey.handler.LoginSuccessHandler;
-import com.PangaeaOdyssey.PangaeaOdyssey.handler.OAuth2LoginFailureHandler;
-import com.PangaeaOdyssey.PangaeaOdyssey.handler.OAuth2LoginSuccessHandler;
+import com.PangaeaOdyssey.PangaeaOdyssey.handler.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +38,14 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico","/index.html").permitAll()
+                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico","/index.html","/logout").permitAll()
                         .requestMatchers("/sign-up").permitAll() // 회원가입 접근 가능
                         .requestMatchers("/login", "/oauth2/callback").permitAll() // 리디렉션 URI 허용
                         .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
@@ -62,10 +60,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("로그아웃 성공");
-                        })
+                        .logoutSuccessHandler(customLogoutSuccessHandler) // 커스텀 로그아웃 핸들러 설정
                 );
         // 필터 순서 설정
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.stream.Collectors;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,19 +35,23 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = jwtService.extractAccessToken(request).orElse(null);
+        // 헤더에서 Refresh Token 추출
         String refreshToken = jwtService.extractRefreshToken(request).orElse(null);
 
+        // 만약 헤더에서 추출이 안 됐다면 쿠키에서 추출 시도
+        if (refreshToken == null) {
+            refreshToken = jwtService.extractRefreshTokenFromCookie(request).orElse(null);
+        }
+
         if (refreshToken != null) {
-            userService.logout(refreshToken);  // 서비스 메서드를 호출하여 로그아웃 처리 
-            log.info("UserService로그아웃 함수 호출 됨");
+            userService.logout(refreshToken);  // 서비스 메서드를 호출하여 로그아웃 처리
+            log.info("UserService 로그아웃 함수 호출 됨");
         }
 
         // 응답 헤더에서 토큰 제거
         jwtService.setAccessTokenHeader(response, "");
         jwtService.setRefreshTokenHeader(response, "");
-        log.info("로그아웃 요청 처리 중. Refresh Token: {}", refreshToken);
-        // 응답 인코딩 설정
+
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         return "로그아웃 되었습니다.";

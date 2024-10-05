@@ -42,7 +42,7 @@ public class UserService {
         memberRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
                     user.updateRefreshToken(null);  // Refresh Token을 무효화
-                    memberRepository.save(user);
+                    memberRepository.saveAndFlush(user);  // 즉시 변경 내용을 DB에 반영
                 });
     }
     public void updateUserRoleToUser(String email) {
