@@ -107,18 +107,6 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
     /**
-     * 쿠키에서 RefreshToken 추출
-     */
-    public Optional<String> extractRefreshTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            return Arrays.stream(request.getCookies())
-                    .filter(cookie -> cookie.getName().equals("refreshToken"))
-                    .map(Cookie::getValue)
-                    .findFirst();
-        }
-        return Optional.empty();
-    }
-    /**
      * 헤더에서 AccessToken 추출
      * 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
