@@ -33,27 +33,5 @@ public class UserController {
         return "jwtTest 요청 성공";
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        // 헤더에서 Refresh Token 추출
-        String refreshToken = jwtService.extractRefreshToken(request).orElse(null);
 
-        // 만약 헤더에서 추출이 안 됐다면 쿠키에서 추출 시도
-        if (refreshToken == null) {
-            refreshToken = jwtService.extractRefreshTokenFromCookie(request).orElse(null);
-        }
-
-        if (refreshToken != null) {
-            userService.logout(refreshToken);  // 서비스 메서드를 호출하여 로그아웃 처리
-            log.info("UserService 로그아웃 함수 호출 됨");
-        }
-
-        // 응답 헤더에서 토큰 제거
-        jwtService.setAccessTokenHeader(response, "");
-        jwtService.setRefreshTokenHeader(response, "");
-
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
-        return "로그아웃 되었습니다.";
-    }
 }
