@@ -46,4 +46,12 @@ public class UserService {
             }
         });
     }
+    @Transactional
+    public void logoutUser(String email) {
+        memberRepository.findByEmail(email).ifPresent(user -> {
+            user.updateRefreshToken(null); // Refresh Token 삭제
+            memberRepository.saveAndFlush(user);
+            log.info("사용자의 리프레시 토큰이 삭제되었습니다. 이메일: {}", email);
+        });
+    }
 }
