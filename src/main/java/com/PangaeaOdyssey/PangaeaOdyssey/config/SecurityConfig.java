@@ -1,4 +1,5 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.config;
+
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.CustomOAuth2UserService;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtAuthenticationProcessingFilter;
@@ -44,7 +45,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico","/index.html","/logout").permitAll()
+                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/index.html","/custom-logout").permitAll()
                         .requestMatchers("/sign-up").permitAll() // 회원가입 접근 가능
                         .requestMatchers("/login", "/oauth2/callback").permitAll() // 리디렉션 URI 허용
                         .requestMatchers("/admin-jwt-test").hasRole("ADMIN")
@@ -58,6 +59,9 @@ public class SecurityConfig {
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                ).logout(logout -> logout
+                        .logoutUrl("/custom-logout") // 커스텀 로그아웃 엔드포인트 설정
+                        //.logoutSuccessUrl("/login?logout") // 로그아웃 후 리디렉션 URL 설정
                 );
         // 필터 순서 설정
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
@@ -77,7 +81,6 @@ public class SecurityConfig {
      * FormLogin(기존 스프링 시큐리티 로그인)과 동일하게 DaoAuthenticationProvider 사용
      * UserDetailsService는 커스텀 LoginService로 등록
      * 또한, FormLogin과 동일하게 AuthenticationManager로는 구현체인 ProviderManager 사용(return ProviderManager)
-     *
      */
     @Bean
     public AuthenticationManager authenticationManager() {
