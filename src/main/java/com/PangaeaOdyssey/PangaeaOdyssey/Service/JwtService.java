@@ -4,6 +4,7 @@ import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -63,7 +67,10 @@ public class JwtService {
                 .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
     }
-
+    public SecretKey generateSecretKey(String key) {
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length, "HmacSHA256");
+    }
     /**
      * RefreshToken 생성
      * RefreshToken은 Claim에 email도 넣지 않으므로 withClaim() X
@@ -72,6 +79,7 @@ public class JwtService {
         Date now = new Date();
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withClaim("category", "refresh") // 카테고리 정보 추가
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(Algorithm.HMAC512(secretKey));
     }
@@ -169,5 +177,15 @@ public class JwtService {
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
             return false;
         }
+    }
+
+    public Boolean isExpired(String token) {
+        SecretKey secretKeySpec = generateSecretKey(secretKey); // String을 SecretKey로 변환
+        return Jwts.parser().verifyWith(secretKeySpec).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    }
+
+    public String getCategory(String token) {
+         SecretKey secretKeySpec = generateSecretKey(secretKey); // String을 SecretKey로 변환
+        return Jwts.parser().verifyWith(secretKeySpec).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 }
