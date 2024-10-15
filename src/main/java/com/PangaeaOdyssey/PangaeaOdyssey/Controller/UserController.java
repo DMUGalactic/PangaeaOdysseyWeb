@@ -40,6 +40,7 @@ public class UserController {
     public String adminJwtTest(){
         return "adminTest 요청 성공";
     }
+
     @PostMapping("/custom-logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // SecurityContext에서 현재 인증된 사용자 정보를 가져옴

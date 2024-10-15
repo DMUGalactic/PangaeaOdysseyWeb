@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import com.PangaeaOdyssey.PangaeaOdyssey.Service.CustomLogoutFilter;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -59,17 +60,17 @@ public class SecurityConfig {
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                ).logout(logout -> logout
-                        .logoutUrl("/custom-logout") // 커스텀 로그아웃 엔드포인트 설정
-                        //.logoutSuccessUrl("/login?logout") // 로그아웃 후 리디렉션 URL 설정
                 );
         // 필터 순서 설정
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterAt(customLogoutFilter(), LogoutFilter.class);
         return http.build();
     }
-
+    @Bean
+    public CustomLogoutFilter customLogoutFilter() {
+        return new CustomLogoutFilter(jwtService, userRepository);
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
