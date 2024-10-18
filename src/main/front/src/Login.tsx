@@ -10,14 +10,14 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.183.45:8080/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 쿠키 등 인증 정보 포함
-        body: JSON.stringify({ email, password }),
-      });
+     const response = await fetch("http://localhost:8081/login", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       credentials: "include",
+       body: JSON.stringify({ email, password }),
+     });
 
       if (!response.ok) {
         const errorData = await response.json(); // 에러 메시지를 구체적으로 받음
