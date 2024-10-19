@@ -1,76 +1,79 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./css/Login.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("admin@admin.com");
-  const [password, setPassword] = useState<string>("admin");
-  const [error, setError] = useState<string | null>(null);
+interface LoginProps {
+  onLoginSuccess: (accessToken: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
-     const response = await fetch("http://localhost:8081/login", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       credentials: "include",
-       body: JSON.stringify({ email, password }),
-     });
+      const response = await axios.post(
+        'http://localhost:8081/login',
+        { email, password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const accessToken = response.headers['authorization'];
+      const refreshToken = response.headers['refresh'];
 
-      if (!response.ok) {
-        const errorData = await response.json(); // 에러 메시지를 구체적으로 받음
-        throw new Error(errorData.message || `Error: ${response.status}`);
+      if (accessToken && refreshToken) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        onLoginSuccess(accessToken);
+        navigate('/home');
+      } else {
+        setErrorMessage('Failed to retrieve tokens. Please try again.');
       }
-
-      const data = await response.json();
-      console.log("로그인 성공:", data);
-      navigate("/videobackground"); // 로그인 성공 후 대시보드로 이동
     } catch (error) {
-      console.error("로그인 실패:", error);
-      setError("로그인 실패.\n이메일 또는 비밀번호를 확인하세요.");
+      setErrorMessage('Invalid email or password. Please try again.');
     }
   };
 
   return (
     <div className="login-container">
-      <h2>로그인</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
-        <div>
-          <label htmlFor="email">이메일:</label>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
         </div>
-        <div>
-          <label htmlFor="password">비밀번호:</label>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
         </div>
-        {error && (
-          <p className="error-message">
-            로그인 실패.
-            <br />
-            이메일 또는 비밀번호를 확인하세요.
-          </p>
-        )}{" "}
-        {/* 에러 메시지 */}
-        <button type="submit">로그인</button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <button type="submit">Login</button>
       </form>
     </div>
   );
