@@ -7,7 +7,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8081/login", {
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,19 +18,19 @@ const Login = () => {
           password,     // password 상태값을 JSON으로 변환
         }),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("로그인 성공:", data);
-      // 로그인 성공 후 처리
-    } catch (error) {
-      console.error("로그인 실패:", error);
-      setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
+  // 여기서 응답 상태 코드 확인
+  console.log("응답 상태 코드:", response.status);
+  const data = await response.json(); // 응답 데이터 처리
+  console.log("응답 데이터:", data);
+  if (!response.ok || data.success === false) {  // 응답 데이터 형식에 따른 검증
+    throw new Error(data.message || "로그인 실패.");
     }
+    console.log("로그인 성공:", data);
+      // 로그인 성공 후 처리
+     } catch (error) {
+        console.error("로그인 실패:", error);
+        setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
+      }
   };
 
   return (
