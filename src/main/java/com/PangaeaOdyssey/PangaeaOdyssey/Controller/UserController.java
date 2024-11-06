@@ -44,7 +44,6 @@ public class UserController {
     @PostMapping("/custom-logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // SecurityContext에서 현재 인증된 사용자 정보를 가져옴
-        log.info("로그아웃 컨트롤러 요청들어옴");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getName());
         if (authentication != null) {
