@@ -29,6 +29,22 @@ h2 {
   box-sizing: border-box;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-password-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #007bff;
+}
+
 .signup-button {
   width: 100%;
   padding: 12px;

@@ -9,7 +9,7 @@ const VideoBackground: React.FC = () => {
         <source src={backgroundVideo} type="video/mp4" />
       </video>
       <div className="content">
-        <h1>Welcom to the pangaeaodyssey.</h1>
+        <h1>Welcom to the PangaeaOdyssey.</h1>
         <p>This is our Game.</p>
       </div>
     </div>

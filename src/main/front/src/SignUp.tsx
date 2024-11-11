@@ -8,9 +8,21 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
   const handleSignUp = async () => {
+    if (!validateEmail(email)) {
+      setError('유효한 이메일 주소를 입력해 주세요.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
@@ -53,20 +65,38 @@ const SignUp: React.FC = () => {
           placeholder="이메일"
           className="signup-input"
         />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호"
-          className="signup-input"
-        />
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="비밀번호 확인"
-          className="signup-input"
-        />
+        <div className="password-container">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호"
+            className="signup-input"
+          />
+          <button
+            type="button"
+            className="toggle-password-button"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? '숨기기' : '보기'}
+          </button>
+        </div>
+        <div className="password-container">
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="비밀번호 확인"
+            className="signup-input"
+          />
+          <button
+            type="button"
+            className="toggle-password-button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? '숨기기' : '보기'}
+          </button>
+        </div>
         <input
           type="text"
           value={nickname}
