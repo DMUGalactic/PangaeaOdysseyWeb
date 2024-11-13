@@ -1,77 +1,101 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
+import { useAuth } from "./context/AuthContext"; // useAuth import
+import googleLogo from './images/google.png';
+import naverLogo from './images/naver.png';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("admin@admin.com");
-  const [password, setPassword] = useState<string>("admin");
-  const [error, setError] = useState<string | null>(null);
+const Login = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
   const navigate = useNavigate();
+  const { login } = useAuth(); // login 함수 가져오기
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.183.45:8080/login", {
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        credentials: "include", // 쿠키 등 인증 정보 포함
-        body: JSON.stringify({ email, password }),
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
+    const accessToken = response.headers.get('Authorization');
+    const refreshToken = response.headers.get('Authorization-Refresh'); // 리프레쉬 토큰 가져오기
+    if (accessToken) {
+        // 토큰을 로컬 스토리지나 세션 스토리지에 저장하여 이후 요청에서 사용할 수 있게 합니다.
+        localStorage.setItem('accessToken', accessToken);
+        console.log('Access Token:', accessToken); // 토큰 로그로 출력하기
+    } else {
+        console.error('Access token not found in the response');
+    }
+    if (refreshToken) {
+        // 리프레쉬 토큰을 로컬 스토리지에 저장합니다.
+        localStorage.setItem('refreshToken', refreshToken);
+        console.log('Refresh Token:', refreshToken);
+    } else {
+        console.error('Refresh token not found in the response');
+    }
+    if (!response.ok) {
+        throw new Error("로그인 실패");
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json(); // 에러 메시지를 구체적으로 받음
-        throw new Error(errorData.message || `Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("로그인 성공:", data);
-      navigate("/videobackground"); // 로그인 성공 후 대시보드로 이동
+      // 로그인 성공 시 login 함수 호출 및 홈 화면으로 이동
+      login();
+      navigate("/");
     } catch (error) {
       console.error("로그인 실패:", error);
-      setError("로그인 실패.\n이메일 또는 비밀번호를 확인하세요.");
+      setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
     }
   };
 
   return (
     <div className="login-container">
-      <h2>로그인</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
-        <div>
-          <label htmlFor="email">이메일:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">비밀번호:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && (
-          <p className="error-message">
-            로그인 실패.
-            <br />
-            이메일 또는 비밀번호를 확인하세요.
-          </p>
-        )}{" "}
-        {/* 에러 메시지 */}
-        <button type="submit">로그인</button>
-      </form>
+      <div className="login-form">
+        <h2>로그인</h2>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일"
+          className="login-input"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="비밀번호"
+          className="login-input"
+        />
+        <button onClick={handleLogin} className="login-button">
+          로그인
+        </button>
+        <p className="signup-link">
+                  아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
+                </p>
+        <a href="/oauth2/authorization/google">
+                  <img
+                    src={googleLogo}
+                    alt="Google Login"
+                    className="social-login-button"
+                  />
+                </a>
+                <a href="/oauth2/authorization/naver">
+                  <img
+                    src={naverLogo}
+                    alt="Naver Login"
+                    className="social-login-button"
+                  />
+                </a>
+
+        {error && <p className="login-error">{error}</p>}
+      </div>
     </div>
   );
 };
