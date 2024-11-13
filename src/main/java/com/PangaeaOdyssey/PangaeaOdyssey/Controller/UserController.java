@@ -49,13 +49,10 @@ public class UserController {
         log.info(authentication.getName());
         if (authentication != null) {
             String email = authentication.getName();
-            log.info("로그아웃 if문 들어옴");
             // 서비스 계층을 통해 Refresh Token 삭제 처리
             userService.logoutUser(email);
-            log.info("리프레쉬 삭제됨");
             // 로그아웃 처리 - SecurityContext 무효화
             new SecurityContextLogoutHandler().logout(request, response, authentication);
-            log.info("사용자가 로그아웃되었습니다. 이메일: {}", email);
         }
 
         return "로그아웃 성공";
