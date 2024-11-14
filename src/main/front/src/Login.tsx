@@ -53,9 +53,9 @@ const Login = () => {
     }
   };
 
-  // 소셜 로그인 팝업 창 열기
+  // 소셜 로그인 링크로 이동
   const handleSocialLogin = (url: string) => {
-    window.open(`http://localhost:8081${url}`, '_blank', 'width=500,height=600');
+    window.location.href = `http://localhost:8081${url}`;
   };
 
   return (
