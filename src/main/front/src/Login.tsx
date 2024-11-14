@@ -79,14 +79,14 @@ const Login = () => {
         <p className="signup-link">
                   아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
                 </p>
-        <a href="/oauth2/authorization/google">
+                <a href="http://localhost:8081/login/oauth2/authorization/google">
                   <img
                     src={googleLogo}
                     alt="Google Login"
                     className="social-login-button"
                   />
                 </a>
-                <a href="/oauth2/authorization/naver">
+                <a href="http://localhost:8081/login/oauth2/authorization/naver">
                   <img
                     src={naverLogo}
                     alt="Naver Login"
