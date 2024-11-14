@@ -18,7 +18,7 @@ const AuthRedirect = () => {
       localStorage.setItem('refreshToken', refreshToken);
 
       // 로그인 상태 업데이트
-      login();  // 여기서 로그인 상태를 업데이트
+      login();  // 여기서 로그인 상태를 업데이트합니다.
 
       // 홈 화면으로 이동
       navigate('/');
