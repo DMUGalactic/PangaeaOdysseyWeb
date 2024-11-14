@@ -15,7 +15,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/login", { // Backend login URL
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -53,11 +53,6 @@ const Login = () => {
     }
   };
 
-  // 소셜 로그인 링크로 이동
-  const handleSocialLogin = (url: string) => {
-    window.location.href = `http://localhost:8081${url}`;
-  };
-
   return (
     <div className="login-container">
       <div className="login-form">
@@ -80,26 +75,22 @@ const Login = () => {
           로그인
         </button>
         <p className="signup-link">
-          아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
-        </p>
-
-        {/* Google 소셜 로그인 버튼 */}
-        <img
-          src={googleLogo}
-          alt="Google Login"
-          className="social-login-button"
-          onClick={() => handleSocialLogin('/oauth2/authorization/google')}
-          style={{ cursor: 'pointer' }}
-        />
-
-        {/* Naver 소셜 로그인 버튼 */}
-        <img
-          src={naverLogo}
-          alt="Naver Login"
-          className="social-login-button"
-          onClick={() => handleSocialLogin('/oauth2/authorization/naver')}
-          style={{ cursor: 'pointer' }}
-        />
+                  아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
+                </p>
+        <a href="/oauth2/authorization/google">
+                  <img
+                    src={googleLogo}
+                    alt="Google Login"
+                    className="social-login-button"
+                  />
+                </a>
+                <a href="/oauth2/authorization/naver">
+                  <img
+                    src={naverLogo}
+                    alt="Naver Login"
+                    className="social-login-button"
+                  />
+                </a>
 
         {error && <p className="login-error">{error}</p>}
       </div>
