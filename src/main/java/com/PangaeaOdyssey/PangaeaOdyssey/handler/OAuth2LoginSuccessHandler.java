@@ -51,7 +51,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             // Access Token 및 Refresh Token 응답 헤더에 추가
             jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-            response.sendRedirect("http://localhost:3000");  // 홈 페이지로 리다이렉트
+            response.sendRedirect("http://localhost:3000/auth-redirect?accessToken=" + accessToken + "&refreshToken=" + refreshToken);  // 홈 페이지로 리다이렉트
         } catch (Exception e) {
             log.error("OAuth2 로그인 성공 후 처리 중 오류 발생: {}", e.getMessage(), e);
             throw new ServletException("로그인 후 처리 중 문제가 발생했습니다.", e);
