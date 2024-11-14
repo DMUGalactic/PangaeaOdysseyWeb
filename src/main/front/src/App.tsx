@@ -8,6 +8,7 @@ import Info from "./Info";
 import Login from "./Login";
 import Company from "./Company";
 import SignUp from "./SignUp";
+import AuthRedirect from "./AuthRedirect";
 
 import "./App.css"
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/company" element={<Company />} />
             <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/auth-redirect" element={<AuthRedirect />} />
           </Routes>
         </div>
         <Footer />
