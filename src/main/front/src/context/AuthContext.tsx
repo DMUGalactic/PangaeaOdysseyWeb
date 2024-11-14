@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -8,19 +8,31 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("accessToken"));
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return !!localStorage.getItem('accessToken');
+  });
 
   const login = () => {
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    // 로그아웃 시 모든 토큰 삭제
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
   };
+
+  // OAuth2 로그인 후 페이지가 리다이렉트되었을 때도 로그인 상태를 유지하도록 설정
+  useEffect(() => {
+    if (localStorage.getItem('accessToken')) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
@@ -29,10 +41,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
