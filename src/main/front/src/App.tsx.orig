@@ -8,7 +8,11 @@ import Info from "./Info";
 import Login from "./Login";
 import Company from "./Company";
 import SignUp from "./SignUp";
+<<<<<<< HEAD
+=======
 import AuthRedirect from "./AuthRedirect";
+>>>>>>> 3b9a1c71586a1b3887118976ecc1588e96abf47b
+
 import "./App.css"
 
 function App() {
@@ -24,7 +28,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/company" element={<Company />} />
             <Route path="/sign-up" element={<SignUp />} />
+<<<<<<< HEAD
+=======
             <Route path="/auth-redirect" element={<AuthRedirect />} />
+>>>>>>> 3b9a1c71586a1b3887118976ecc1588e96abf47b
           </Routes>
         </div>
         <Footer />

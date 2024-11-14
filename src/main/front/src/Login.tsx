@@ -15,7 +15,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("/login", { // Backend login URL
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -45,7 +45,6 @@ const Login = () => {
         throw new Error("로그인 실패");
       }
 
-      // 로그인 성공 시 login 함수 호출 및 홈 화면으로 이동
       login();
       navigate("/");
     } catch (error) {
@@ -54,9 +53,9 @@ const Login = () => {
     }
   };
 
-  // 소셜 로그인 팝업 창 열기
+  // 소셜 로그인 링크로 이동
   const handleSocialLogin = (url: string) => {
-    window.open(`http://localhost:8081${url}`, '_blank', 'width=500,height=600');
+    window.location.href = `http://localhost:8081${url}`;
   };
 
   return (
