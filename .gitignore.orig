@@ -1,0 +1,102 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# Node.js 관련 파일 및 디렉터리
+node_modules/
+.pnpm-debug.log*
+yarn-error.log
+yarn.lock
+package-lock.json
+.pnpm/
+
+# 로컬 환경 설정 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 빌드 출력물
+build/
+dist/
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 캐시 및 기타
+.cache/
+coverage/
+.vscode/
+.DS_Store
+*.log
+*.swp
+*.swo
+.idea/
+
+# MacOS 관련 파일
+*.DS_Store
+
+# Windows 관련 파일
+Thumbs.db
+
+# 에디터 관련 파일
+*.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# 기타 설정
+/public/static/
+*.lock
+
+/src/main/front/node_modules/
+<<<<<<< HEAD
+/src/main/resources/application.properties
+=======
+/src/main/resources/application.properties/
+>>>>>>> 3b9a1c71586a1b3887118976ecc1588e96abf47b
+
+# 모든 텍스트 파일에 대해 자동 줄바꿈 변환
+* text=auto
+
+# Java 파일을 LF로 고정
+*.java text eol=lf
+
+# 설정 파일을 LF로 고정
+*.properties text eol=lf

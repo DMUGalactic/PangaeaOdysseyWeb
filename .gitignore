@@ -86,6 +86,8 @@ Thumbs.db
 *.lock
 
 /src/main/front/node_modules/
+/src/main/resources/application.properties/
+
 /src/main/resources/application.properties
 
 # 모든 텍스트 파일에 대해 자동 줄바꿈 변환
@@ -95,4 +97,4 @@ Thumbs.db
 *.java text eol=lf
 
 # 설정 파일을 LF로 고정
-*.properties text eol=lf
+*.properties text eol=lfsrc/main/resources/application.properties
