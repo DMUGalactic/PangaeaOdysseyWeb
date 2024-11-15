@@ -9,6 +9,7 @@ import Login from "./Login";
 import Company from "./Company";
 import SignUp from "./SignUp";
 import AuthRedirect from "./AuthRedirect";
+
 import "./App.css"
 
 function App() {
