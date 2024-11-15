@@ -9,7 +9,12 @@ const Download: React.FC = () => {
         <p>pangaeaodyssey 전용 다운로드/설치 안내입니다.</p>
       </div>
       <div className="download-button-container">
-        <a href="#download" className="download-button"></a>
+        <a
+          href="http://localhost:8081/download/game-file" // 백엔드 파일 다운로드 경로
+          className="download-button"
+          download
+        >
+        </a>
       </div>
       <table className="chart">
         <thead>

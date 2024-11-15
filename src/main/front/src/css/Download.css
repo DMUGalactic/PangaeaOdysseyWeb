@@ -11,8 +11,8 @@
 
 .download-button {
   display: inline-block; /* 블록 요소로 설정 */
-  width: 500px; /* 버튼 너비 설정 */
-  height: 160px; /* 버튼 높이 설정 */
+  width: 500px;
+  height: 160px;
   background-image: url("../images/DownloadButton.png");
   background-size: contain; /* 이미지 크기 조정 */
   background-repeat: no-repeat; /* 반복 방지 */
@@ -22,7 +22,7 @@
 }
 
 .download-button:hover {
-  background-color: #3c3c3c;
+   background-image: url("../images/DownloadButton2.png");
 }
 
 .chart {

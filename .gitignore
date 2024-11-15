@@ -86,6 +86,7 @@ Thumbs.db
 *.lock
 
 /src/main/front/node_modules/
+/src/main/resources/application.properties/
 
 /src/main/resources/application.properties
 
