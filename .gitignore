@@ -97,4 +97,4 @@ Thumbs.db
 *.java text eol=lf
 
 # 설정 파일을 LF로 고정
-*.properties text eol=lf
+*.properties text eol=lfsrc/main/resources/application.properties
