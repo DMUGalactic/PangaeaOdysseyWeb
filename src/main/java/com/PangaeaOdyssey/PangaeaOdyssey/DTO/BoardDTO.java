@@ -1,7 +1,11 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.DTO;
 
+import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class BoardDTO {
     private Long id;
     private String title;
@@ -21,17 +25,26 @@ public class BoardDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-    // Getter와 Setter 필요 시 추가 (Lombok 사용 가능)
-    public BoardDTO convertToDTO(Board board) {
+    public static BoardDTO createBoardDTO(Board board) {
         return new BoardDTO(
                 board.getId(),
                 board.getTitle(),
                 board.getContent(),
-                board.getAuthor().getNickname(), // Member 객체에서 닉네임 추출
+                board.getAuthor() != null ? board.getAuthor().getNickname() : null, // 작성자가 없을 경우 처리
                 board.getViews(),
-                board.getCreatedAt(), // BaseEntity에서 상속받은 createdAt
-                board.getUpdatedAt()  // BaseEntity에서 상속받은 updatedAt
+                board.getCreatedAt(),
+                board.getUpdatedAt()
         );
+    }
+    public Board toEntity() {
+        Board board = new Board();
+        board.setTitle(this.title);
+        board.setContent(this.content);
+        board.setViews(this.views);
+
+        // Author 설정은 필요한 경우 추가 로직 필요
+        // 예: board.setAuthor(memberRepository.findByNickname(this.authorNickname).orElse(null));
+
+        return board;
     }
 }
