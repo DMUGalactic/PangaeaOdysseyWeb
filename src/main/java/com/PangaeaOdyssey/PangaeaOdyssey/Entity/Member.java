@@ -20,8 +20,8 @@ public class Member {
     private String email; // 이메일
     @Column
     private String password; // 비밀번호
-    @Column
-    private String nickname; // 닉네임
+    @Column(unique = true)
+    private String nickname;    //닉네임
     @Column
     private String imageUrl; // 프로필 이미지
 
