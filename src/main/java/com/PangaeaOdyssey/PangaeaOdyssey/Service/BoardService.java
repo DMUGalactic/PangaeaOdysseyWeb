@@ -65,15 +65,27 @@ public class BoardService {
         BoardDTO boardDTO = BoardDTO.createBoardDTO(updated);
         return boardDTO;
     }
-    /*
-        public void deleteBoard(Long id) {
-            boardRepository.deleteById(id);
-        }
-         */
-    private boolean isAdmin(String nickname) {
-        return memberRepository.findByNickname(nickname)
+
+    @Transactional
+    public BoardDTO deleteBoard(Long id, String password, String token) {
+        String email = jwtService.extractEmail(token.replace("Bearer ", ""))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired token"));
+
+        Board target = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글 삭제 실패!"));
+
+        // 현재 사용자의 정보를 조회하여 관리자 여부 확인
+        boolean isAdmin = memberRepository.findByEmail(email)
                 .map(Member::getRole)
-                .map(role -> role == Role.ADMIN)
+                .map(role -> role == Role.ADMIN) // Role은 실제로 사용하고 있는 Role enum 클래스의 ADMIN 값
                 .orElse(false);
+
+        // 관리자 권한이 없는 경우에만 비밀번호 검증
+        if (!isAdmin && !target.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 맞지 않음");
+        }
+        boardRepository.deleteById(id);
+        BoardDTO dto = BoardDTO.createBoardDTO(target);
+        return dto;
     }
 }
