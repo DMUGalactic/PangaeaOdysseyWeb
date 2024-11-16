@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 @RestController
@@ -36,10 +37,11 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto) {
-        BoardDTO boardDTO = BoardService.createBoard(dto);
+    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto, Principal principal) {
+        String currentUserNickname = principal.getName();
+        BoardDTO boardDTO = boardService.createBoard(dto, currentUserNickname);
 
-        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardDTO);
     }
 /**
     @PutMapping("/{id}")

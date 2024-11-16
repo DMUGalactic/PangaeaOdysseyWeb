@@ -2,7 +2,9 @@ package com.PangaeaOdyssey.PangaeaOdyssey.Service;
 
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
+import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.BoardRepository;
+import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,8 @@ import java.util.Optional;
 public class BoardService {
     @Autowired
     private final BoardRepository boardRepository;
-
+    @Autowired
+    private final MemberRepository memberRepository;
     public List<BoardDTO> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
         List<BoardDTO> dtos = new ArrayList<>();
@@ -34,13 +37,30 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
         return BoardDTO.createBoardDTO(board); // DTO로 변환
     }
+    /*
     @Transactional
-    public static BoardDTO createBoard(BoardDTO boardDTO) {
+    public BoardDTO createBoard(BoardDTO boardDTO) {
         Board board = boardDTO.toEntity();
         boardRepository.save(board);
         return BoardDTO.createBoardDTO(board);
     }
+*/
+    @Transactional
+    public BoardDTO createBoard(BoardDTO boardDTO, String currentUserNickname) {
+        // 현재 로그인된 사용자의 Member를 조회
+        Member author = memberRepository.findByNickname(currentUserNickname)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with nickname: " + currentUserNickname));
 
+        // DTO에서 Board 엔티티로 변환
+        Board board = boardDTO.toEntity(author);
+
+        // 저장
+        Board savedBoard = boardRepository.save(board);
+
+        // 저장된 엔티티를 DTO로 변환하여 반환
+        return BoardDTO.createBoardDTO(savedBoard);
+    }
+    /*
     public Board updateBoard(Long id, Board updatedBoard) {
         return boardRepository.findById(id)
                 .map(board -> {
@@ -65,4 +85,5 @@ public class BoardService {
                 board.getUpdatedAt()
         );
     }
+     */
 }
