@@ -1,5 +1,6 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Entity;
 
+import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,21 @@ public class Board extends BaseEntity{
     private String password; // 새로 추가된 비밀번호 필드
 
     private int views = 0;
+
+    public void patch(BoardDTO dto) {
+        System.out.println("Existing Board ID: " + this.id);
+        System.out.println("DTO ID: " + dto.getId());
+        if (dto.getId() <= 0 || this.id != dto.getId()) {
+            throw new IllegalArgumentException("게시판 수정 실패! 잘못된 id가 입력됐습니다.");
+        }
+        if(dto.getTitle() != null){
+            this.title = dto.getTitle();
+        }
+        if(dto.getContent() != null){
+            this.content = dto.getContent();
+        }
+        if(dto.getPassword() != null){
+            this.password = dto.getPassword();
+        }
+    }
 }

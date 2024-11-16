@@ -41,14 +41,7 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
         return BoardDTO.createBoardDTO(board); // DTO로 변환
     }
-    /*
-    @Transactional
-    public BoardDTO createBoard(BoardDTO boardDTO) {
-        Board board = boardDTO.toEntity();
-        boardRepository.save(board);
-        return BoardDTO.createBoardDTO(board);
-    }
-*/
+
     @Transactional
     public BoardDTO createBoard(BoardDTO boardDTO) {
         Board board = boardDTO.toEntity();
@@ -56,32 +49,27 @@ public class BoardService {
 
         return BoardDTO.createBoardDTO(savedBoard);
     }
-    /*
-    public Board updateBoard(Long id, Board updatedBoard) {
-        return boardRepository.findById(id)
-                .map(board -> {
-                    board.setTitle(updatedBoard.getTitle());
-                    board.setContent(updatedBoard.getContent());
-                    board.setViews(updatedBoard.getViews()); // 필요 시 다른 필드도 추가
-                    return boardRepository.save(board);
-                }).orElseThrow(() -> new RuntimeException("Board not found"));
-    }
 
-    public void deleteBoard(Long id) {
-        boardRepository.deleteById(id);
+    @Transactional
+    public BoardDTO updateBoard(Long id, String password, BoardDTO updatedBoardDTO) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+
+        // 비밀번호 검증
+        if (!board.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 맞지 않음");
+        }
+        board.patch(updatedBoardDTO);
+        Board updated = boardRepository.save(board);
+
+        BoardDTO boardDTO = BoardDTO.createBoardDTO(updated);
+        return boardDTO;
     }
-    private BoardDTO convertToDTO(Board board) {
-        return new BoardDTO(
-                board.getId(),
-                board.getTitle(),
-                board.getContent(),
-                board.getAuthor().getNickname(), // 작성자 닉네임 가져오기
-                board.getViews(),
-                board.getCreatedAt(),
-                board.getUpdatedAt()
-        );
-    }
-     */
+    /*
+        public void deleteBoard(Long id) {
+            boardRepository.deleteById(id);
+        }
+         */
     private boolean isAdmin(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .map(Member::getRole)

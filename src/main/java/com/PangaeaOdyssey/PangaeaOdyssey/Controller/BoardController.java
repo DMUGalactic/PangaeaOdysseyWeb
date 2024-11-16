@@ -42,12 +42,16 @@ public class BoardController {
 
         return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
-/**
-    @PutMapping("/{id}")
-    public ResponseEntity<BoardDTO> updateBoard(@PathVariable Long id, @RequestBody Board updatedBoard) {
-        return ResponseEntity.ok(boardService.updateBoard(id, updatedBoard));
-    }
 
+    @PutMapping("/update/{id}/{password}")
+    public ResponseEntity<BoardDTO> updateBoard(@PathVariable Long id,
+                                                @PathVariable String password,
+                                                @RequestBody BoardDTO updatedBoardDTO) {
+        System.out.println(id);
+        BoardDTO boardDTO = boardService.updateBoard(id, password, updatedBoardDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
+    }
+/**
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
         boardService.deleteBoard(id);
