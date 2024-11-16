@@ -8,7 +8,7 @@ import lombok.Setter;
 @Table(name = "board") // 정확한 테이블 이름 지정
 @Getter
 @Setter
-public class Board extends BaseEntity {
+public class Board extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +16,7 @@ public class Board extends BaseEntity {
 
     private String title;
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "member_nickname", referencedColumnName = "nickname")
-    private Member author;
+    private String password; // 새로 추가된 비밀번호 필드
 
     private int views = 0;
 }

@@ -3,12 +3,14 @@ package com.PangaeaOdyssey.PangaeaOdyssey.Service;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
+import com.PangaeaOdyssey.PangaeaOdyssey.Enum.Role;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.BoardRepository;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     @Autowired
     private final MemberRepository memberRepository;
+    @Autowired
+    private final JwtService jwtService;
     public List<BoardDTO> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
         List<BoardDTO> dtos = new ArrayList<>();
@@ -46,18 +50,10 @@ public class BoardService {
     }
 */
     @Transactional
-    public BoardDTO createBoard(BoardDTO boardDTO, String currentUserNickname) {
-        // 현재 로그인된 사용자의 Member를 조회
-        Member author = memberRepository.findByNickname(currentUserNickname)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with nickname: " + currentUserNickname));
-
-        // DTO에서 Board 엔티티로 변환
-        Board board = boardDTO.toEntity(author);
-
-        // 저장
+    public BoardDTO createBoard(BoardDTO boardDTO) {
+        Board board = boardDTO.toEntity();
         Board savedBoard = boardRepository.save(board);
 
-        // 저장된 엔티티를 DTO로 변환하여 반환
         return BoardDTO.createBoardDTO(savedBoard);
     }
     /*
@@ -86,4 +82,10 @@ public class BoardService {
         );
     }
      */
+    private boolean isAdmin(String nickname) {
+        return memberRepository.findByNickname(nickname)
+                .map(Member::getRole)
+                .map(role -> role == Role.ADMIN)
+                .orElse(false);
+    }
 }

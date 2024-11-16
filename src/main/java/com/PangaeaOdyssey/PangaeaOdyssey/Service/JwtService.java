@@ -188,4 +188,17 @@ public class JwtService {
          SecretKey secretKeySpec = generateSecretKey(secretKey); // String을 SecretKey로 변환
         return Jwts.parser().verifyWith(secretKeySpec).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
+    public Optional<String> extractNickname(String accessToken) {
+        try {
+            // 토큰에서 "nickname"이라는 클레임을 추출
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim("nickname") // "nickname"이라는 클레임에서 값을 가져옴
+                    .asString());
+        } catch (Exception e) {
+            log.error("닉네임을 추출할 수 없습니다: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
 }

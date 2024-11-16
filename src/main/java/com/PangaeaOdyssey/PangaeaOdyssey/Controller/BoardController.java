@@ -37,11 +37,10 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto, Principal principal) {
-        String currentUserNickname = principal.getName();
-        BoardDTO boardDTO = boardService.createBoard(dto, currentUserNickname);
+    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto) {
+        BoardDTO boardDTO = boardService.createBoard(dto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
 /**
     @PutMapping("/{id}")
