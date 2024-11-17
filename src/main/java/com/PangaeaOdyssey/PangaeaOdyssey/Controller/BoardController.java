@@ -1,6 +1,7 @@
 package com.PangaeaOdyssey.PangaeaOdyssey.Controller;
 
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
+import com.PangaeaOdyssey.PangaeaOdyssey.DTO.SearchDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.BoardService;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtService;
@@ -59,5 +60,22 @@ public class BoardController {
                                                 @RequestHeader("Authorization") String token) {
         BoardDTO boardDTO = boardService.deleteBoard(id, password, token);
         return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
+    }
+    @PostMapping("/search")
+    public ResponseEntity<List<BoardDTO>> searchBoards(@RequestBody SearchDTO request) {
+        String keyword = request.getKeyword();
+        String type = request.getType();
+
+        List<BoardDTO> searchResults;
+        if ("title".equalsIgnoreCase(type)) {
+            searchResults = boardService.searchByTitle(keyword);
+        } else if ("content".equalsIgnoreCase(type)) {
+            searchResults = boardService.searchByContent(keyword);
+        } else {
+            // 기본적으로 제목과 내용 모두에서 검색
+            searchResults = boardService.searchByKeyword(keyword);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(searchResults);
     }
 }

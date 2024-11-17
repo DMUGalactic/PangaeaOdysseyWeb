@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Service
 public class BoardService {
@@ -88,5 +90,18 @@ public class BoardService {
         boardRepository.deleteById(id);
         BoardDTO dto = BoardDTO.createBoardDTO(target);
         return dto;
+    }
+    public List<BoardDTO> searchByKeyword(String keyword) {
+        List<Board> boards = boardRepository.searchByKeyword(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
+    }
+    public List<BoardDTO> searchByTitle(String keyword) {
+        List<Board> boards = boardRepository.searchByTitle(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
+    }
+
+    public List<BoardDTO> searchByContent(String keyword) {
+        List<Board> boards = boardRepository.searchByContent(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
     }
 }
