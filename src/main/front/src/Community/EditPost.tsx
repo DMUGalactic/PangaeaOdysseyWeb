@@ -27,7 +27,7 @@ const EditPost: React.FC = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
           },
-          credentials: 'include'
+          credentials: 'include',
         });
 
         if (response.status === 401) {
@@ -118,12 +118,12 @@ const EditPost: React.FC = () => {
             required
           />
         </div>
+        <button type="submit" className="edit-post-button">
+          수정 완료
+        </button>
       </form>
       <button className="back-to-community-button" onClick={() => navigate('/community')}>
         목록으로 돌아가기
-      </button>
-      <button type="submit" className="edit-post-button">
-      수정 완료
       </button>
     </div>
   );

@@ -50,14 +50,15 @@
 }
 
 .edit-post-button {
-  padding: 14px 36px; /* 수정: 버튼 좌우 여백을 줄여서 더 짧게 */
+  padding: 16px 22px; /* 수정: 높이를 유지하고 가로 길이를 더 줄임 */
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 20px 0px 0px 150px;
+  margin: 20px auto;
   background-color: #007bff;
+  width: fit-content;
 }
 
 .edit-post-button:hover {
