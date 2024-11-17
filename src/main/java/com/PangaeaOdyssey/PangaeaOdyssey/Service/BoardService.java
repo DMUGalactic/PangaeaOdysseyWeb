@@ -3,12 +3,14 @@ package com.PangaeaOdyssey.PangaeaOdyssey.Service;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Member;
+import com.PangaeaOdyssey.PangaeaOdyssey.Enum.Role;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.BoardRepository;
 import com.PangaeaOdyssey.PangaeaOdyssey.Repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     @Autowired
     private final MemberRepository memberRepository;
+    @Autowired
+    private final JwtService jwtService;
     public List<BoardDTO> getAllBoards() {
         List<Board> boards = boardRepository.findAll();
         List<BoardDTO> dtos = new ArrayList<>();
@@ -37,53 +41,51 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
         return BoardDTO.createBoardDTO(board); // DTO로 변환
     }
-    /*
+
     @Transactional
     public BoardDTO createBoard(BoardDTO boardDTO) {
         Board board = boardDTO.toEntity();
-        boardRepository.save(board);
-        return BoardDTO.createBoardDTO(board);
-    }
-*/
-    @Transactional
-    public BoardDTO createBoard(BoardDTO boardDTO, String currentUserNickname) {
-        // 현재 로그인된 사용자의 Member를 조회
-        Member author = memberRepository.findByNickname(currentUserNickname)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with nickname: " + currentUserNickname));
-
-        // DTO에서 Board 엔티티로 변환
-        Board board = boardDTO.toEntity(author);
-
-        // 저장
         Board savedBoard = boardRepository.save(board);
 
-        // 저장된 엔티티를 DTO로 변환하여 반환
         return BoardDTO.createBoardDTO(savedBoard);
     }
-    /*
-    public Board updateBoard(Long id, Board updatedBoard) {
-        return boardRepository.findById(id)
-                .map(board -> {
-                    board.setTitle(updatedBoard.getTitle());
-                    board.setContent(updatedBoard.getContent());
-                    board.setViews(updatedBoard.getViews()); // 필요 시 다른 필드도 추가
-                    return boardRepository.save(board);
-                }).orElseThrow(() -> new RuntimeException("Board not found"));
+
+    @Transactional
+    public BoardDTO updateBoard(Long id, String password, BoardDTO updatedBoardDTO) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+
+        // 비밀번호 검증
+        if (!board.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 맞지 않음");
+        }
+        board.patch(updatedBoardDTO);
+        Board updated = boardRepository.save(board);
+
+        BoardDTO boardDTO = BoardDTO.createBoardDTO(updated);
+        return boardDTO;
     }
 
-    public void deleteBoard(Long id) {
+    @Transactional
+    public BoardDTO deleteBoard(Long id, String password, String token) {
+        String email = jwtService.extractEmail(token.replace("Bearer ", ""))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired token"));
+
+        Board target = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글 삭제 실패!"));
+
+        // 현재 사용자의 정보를 조회하여 관리자 여부 확인
+        boolean isAdmin = memberRepository.findByEmail(email)
+                .map(Member::getRole)
+                .map(role -> role == Role.ADMIN) // Role은 실제로 사용하고 있는 Role enum 클래스의 ADMIN 값
+                .orElse(false);
+
+        // 관리자 권한이 없는 경우에만 비밀번호 검증
+        if (!isAdmin && !target.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 맞지 않음");
+        }
         boardRepository.deleteById(id);
+        BoardDTO dto = BoardDTO.createBoardDTO(target);
+        return dto;
     }
-    private BoardDTO convertToDTO(Board board) {
-        return new BoardDTO(
-                board.getId(),
-                board.getTitle(),
-                board.getContent(),
-                board.getAuthor().getNickname(), // 작성자 닉네임 가져오기
-                board.getViews(),
-                board.getCreatedAt(),
-                board.getUpdatedAt()
-        );
-    }
-     */
 }

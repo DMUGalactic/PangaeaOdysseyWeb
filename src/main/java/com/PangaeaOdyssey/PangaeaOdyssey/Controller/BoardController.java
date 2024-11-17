@@ -3,6 +3,7 @@ package com.PangaeaOdyssey.PangaeaOdyssey.Controller;
 import com.PangaeaOdyssey.PangaeaOdyssey.DTO.BoardDTO;
 import com.PangaeaOdyssey.PangaeaOdyssey.Entity.Board;
 import com.PangaeaOdyssey.PangaeaOdyssey.Service.BoardService;
+import com.PangaeaOdyssey.PangaeaOdyssey.Service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,11 @@ import java.util.stream.Collectors;
 public class BoardController {
     @Autowired
     private final BoardService boardService;
-
-    public BoardController(BoardService boardService) {
+    @Autowired
+    private final JwtService jwtService;
+    public BoardController(BoardService boardService, JwtService jwtService) {
         this.boardService = boardService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/")
@@ -37,22 +40,25 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto, Principal principal) {
-        String currentUserNickname = principal.getName();
-        BoardDTO boardDTO = boardService.createBoard(dto, currentUserNickname);
+    public ResponseEntity<BoardDTO> createBoard(@RequestBody BoardDTO dto) {
+        BoardDTO boardDTO = boardService.createBoard(dto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardDTO);
-    }
-/**
-    @PutMapping("/{id}")
-    public ResponseEntity<BoardDTO> updateBoard(@PathVariable Long id, @RequestBody Board updatedBoard) {
-        return ResponseEntity.ok(boardService.updateBoard(id, updatedBoard));
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoard(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/update/{id}/{password}")
+    public ResponseEntity<BoardDTO> updateBoard(@PathVariable Long id,
+                                                @PathVariable String password,
+                                                @RequestBody BoardDTO updatedBoardDTO) {
+        BoardDTO boardDTO = boardService.updateBoard(id, password, updatedBoardDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
- */
+
+    @DeleteMapping("/delete/{id}/{password}")
+    public ResponseEntity<BoardDTO> deleteBoard(@PathVariable Long id,
+                                                @PathVariable(required = false) String password,
+                                                @RequestHeader("Authorization") String token) {
+        BoardDTO boardDTO = boardService.deleteBoard(id, password, token);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
+    }
 }

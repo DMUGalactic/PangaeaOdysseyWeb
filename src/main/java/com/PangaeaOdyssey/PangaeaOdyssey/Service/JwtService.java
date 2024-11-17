@@ -185,7 +185,7 @@ public class JwtService {
     }
 
     public String getCategory(String token) {
-         SecretKey secretKeySpec = generateSecretKey(secretKey); // String을 SecretKey로 변환
+        SecretKey secretKeySpec = generateSecretKey(secretKey); // String을 SecretKey로 변환
         return Jwts.parser().verifyWith(secretKeySpec).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 }

@@ -40,7 +40,6 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -51,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/oauth2/callback").permitAll()
                         .requestMatchers("/admin-jwt-test").hasRole("ADMIN")
                         .requestMatchers("/jwt-test").hasRole("USER")
-                        .requestMatchers("/api/boards/create", "/api/boards/update/", "/api/boards/delete/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/boards/create", "/api/boards/update/**", "/api/boards/delete/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
