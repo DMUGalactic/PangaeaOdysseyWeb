@@ -15,7 +15,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("/login", { // Backend login URL
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -26,33 +26,36 @@ const Login = () => {
           password,
         }),
       });
-    const accessToken = response.headers.get('Authorization');
-    const refreshToken = response.headers.get('Authorization-Refresh'); // 리프레쉬 토큰 가져오기
-    if (accessToken) {
-        // 토큰을 로컬 스토리지나 세션 스토리지에 저장하여 이후 요청에서 사용할 수 있게 합니다.
+
+      const accessToken = response.headers.get('Authorization');
+      const refreshToken = response.headers.get('Authorization-Refresh');
+      if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        console.log('Access Token:', accessToken); // 토큰 로그로 출력하기
-    } else {
+        console.log('Access Token:', accessToken);
+      } else {
         console.error('Access token not found in the response');
-    }
-    if (refreshToken) {
-        // 리프레쉬 토큰을 로컬 스토리지에 저장합니다.
+      }
+      if (refreshToken) {
         localStorage.setItem('refreshToken', refreshToken);
         console.log('Refresh Token:', refreshToken);
-    } else {
+      } else {
         console.error('Refresh token not found in the response');
-    }
-    if (!response.ok) {
+      }
+      if (!response.ok) {
         throw new Error("로그인 실패");
-    }
+      }
 
-      // 로그인 성공 시 login 함수 호출 및 홈 화면으로 이동
       login();
       navigate("/");
     } catch (error) {
       console.error("로그인 실패:", error);
       setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
     }
+  };
+
+  // 소셜 로그인 링크로 이동
+  const handleSocialLogin = (url: string) => {
+    window.location.href = `http://localhost:8081${url}`;
   };
 
   return (
@@ -77,22 +80,26 @@ const Login = () => {
           로그인
         </button>
         <p className="signup-link">
-                  아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
-                </p>
-        <a href="/oauth2/authorization/google">
-                  <img
-                    src={googleLogo}
-                    alt="Google Login"
-                    className="social-login-button"
-                  />
-                </a>
-                <a href="/oauth2/authorization/naver">
-                  <img
-                    src={naverLogo}
-                    alt="Naver Login"
-                    className="social-login-button"
-                  />
-                </a>
+          아직 계정이 없으신가요? <a href="/sign-up">회원가입</a>
+        </p>
+
+        {/* Google 소셜 로그인 버튼 */}
+        <img
+          src={googleLogo}
+          alt="Google Login"
+          className="social-login-button"
+          onClick={() => handleSocialLogin('/oauth2/authorization/google')}
+          style={{ cursor: 'pointer' }}
+        />
+
+        {/* Naver 소셜 로그인 버튼 */}
+        <img
+          src={naverLogo}
+          alt="Naver Login"
+          className="social-login-button"
+          onClick={() => handleSocialLogin('/oauth2/authorization/naver')}
+          style={{ cursor: 'pointer' }}
+        />
 
         {error && <p className="login-error">{error}</p>}
       </div>

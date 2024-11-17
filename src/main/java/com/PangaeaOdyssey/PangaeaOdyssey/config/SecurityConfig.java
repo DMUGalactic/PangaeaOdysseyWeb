@@ -46,12 +46,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/index.html","/custom-logout").permitAll()
-                        .requestMatchers("/sign-up").permitAll() // 회원가입 접근 가능
-                        .requestMatchers("/login", "/oauth2/callback").permitAll() // 리디렉션 URI 허용
+                        .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/index.html", "/custom-logout", "/download/**").permitAll()
+                        .requestMatchers("/sign-up","/api/boards/").permitAll()
+                        .requestMatchers("/login", "/oauth2/callback").permitAll()
                         .requestMatchers("/admin-jwt-test").hasRole("ADMIN")
                         .requestMatchers("/jwt-test").hasRole("USER")
-                        .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 관리
