@@ -1,0 +1,64 @@
+.community-container {
+  padding: 40px;
+  max-width: 1200px;
+  height: 800px;
+  margin: 40px auto; /* 위 아래 여유 공간 추가 */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 게시글 목록 테이블 스타일 */
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.board-table th,
+.board-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+.board-table th {
+  background-color: #000;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+/* 각 컬럼의 가로 길이 지정 */
+.board-table th:nth-child(1) { width: 10%; } /* Id */
+.board-table th:nth-child(2) { width: 45%; } /* 제목 */
+.board-table th:nth-child(3) { width: 15%; } /* 글쓴이 */
+.board-table th:nth-child(4) { width: 10%; } /* 조회수 */
+.board-table th:nth-child(5) { width: 10%; } /* 작성일 */
+
+/* 게시글 항목 스타일 */
+.board-item {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.board-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* 게시글 작성 버튼 스타일 */
+.create-board-button-container {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.create-board-button {
+  padding: 10px 20px;
+  background-color: #007bff; /* 파란색으로 변경 */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.create-board-button:hover {
+  background-color: #0056b3;
+}

@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/oauth2/callback").permitAll()
                         .requestMatchers("/admin-jwt-test").hasRole("ADMIN")
                         .requestMatchers("/jwt-test").hasRole("USER")
+                        .requestMatchers("/api/boards/create", "/api/boards/update/", "/api/boards/delete/").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
