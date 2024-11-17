@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/index.html", "/custom-logout", "/download/**").permitAll()
-                        .requestMatchers("/sign-up","/api/boards/").permitAll()
+                        .requestMatchers("/sign-up","/api/boards/board/**").permitAll()
                         .requestMatchers("/login", "/oauth2/callback").permitAll()
                         .requestMatchers("/admin-jwt-test").hasRole("ADMIN")
                         .requestMatchers("/jwt-test").hasRole("USER")
