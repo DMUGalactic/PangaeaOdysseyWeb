@@ -11,6 +11,8 @@ import SignUp from "./SignUp";
 import AuthRedirect from "./AuthRedirect";
 import Community from "./Community/Community"
 import CreatePost from "./Community/CreatePost"
+import PostDetail from './Community/PostDetail';
+import EditPost from './Community/EditPost';
 
 import "./App.css"
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/info" element={<Info />} />
             <Route path="/community" element={<Community />} />
             <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/community/:id" element={<PostDetail />} />
+            <Route path="/edit-post/:id" element={<EditPost />} />
             <Route path="/download" element={<Download />} />
             <Route path="/login" element={<Login />} />
             <Route path="/sign-up" element={<SignUp />} />

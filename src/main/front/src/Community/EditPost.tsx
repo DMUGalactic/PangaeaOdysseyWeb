@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../css/CreatePost.css';
+import '../css/EditPost.css';
 
 const EditPost: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,47 +10,75 @@ const EditPost: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 수정할 게시글 정보 불러오기
+    // 게시글 상세 정보 가져오기
     const fetchPost = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (!accessToken || !refreshToken) {
+        console.error('토큰이 없습니다. 로그인 후 다시 시도하세요.');
+        return;
+      }
+
       try {
-        const response = await fetch(`http://localhost:8081/api/boards/${id}`);
-        if (response.ok) {
+        const response = await fetch(`/api/boards/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          credentials: 'include'
+        });
+
+        if (response.status === 401) {
+          // 인증 실패 시 로그인 페이지로 이동
+          navigate('/login');
+        } else if (response.ok) {
           const data = await response.json();
           setTitle(data.title);
           setContent(data.content);
         } else {
-          console.error('게시글을 불러오지 못했습니다.');
+          console.error('게시글 정보를 불러오지 못했습니다.');
         }
       } catch (error) {
-        console.error('게시글 불러오는 중 오류가 발생했습니다:', error);
+        console.error('게시글 요청 중 오류가 발생했습니다:', error);
       }
     };
 
     fetchPost();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (!accessToken || !refreshToken) {
+      console.error('토큰이 없습니다. 로그인 후 다시 시도하세요.');
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:8081/api/boards/${id}`, {
+      const response = await fetch(`/api/boards/update/${id}/${password}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
+        credentials: 'include',
         body: JSON.stringify({
           title,
           content,
-          password, // 본인 확인을 위해 비밀번호도 함께 전송
         }),
       });
 
       if (response.ok) {
-        navigate('/community'); // 게시글 수정 후 커뮤니티 목록으로 이동
+        console.log('게시글이 성공적으로 수정되었습니다.');
+        navigate(`/community/${id}`);
       } else {
-        console.error('게시글 수정에 실패했습니다.');
+        const errorData = await response.json(); // 오류 응답을 JSON으로 파싱합니다.
+        console.error('게시글 수정에 실패했습니다.', errorData);
       }
     } catch (error) {
       console.error('게시글 수정 중 오류가 발생했습니다:', error);
@@ -58,9 +86,9 @@ const EditPost: React.FC = () => {
   };
 
   return (
-    <div className="create-post-container">
+    <div className="edit-post-container">
       <h1>게시글 수정하기</h1>
-      <form onSubmit={handleSubmit} className="create-post-form">
+      <form onSubmit={handleSubmit} className="edit-post-form">
         <div className="form-group">
           <label htmlFor="title">제목</label>
           <input
@@ -90,12 +118,12 @@ const EditPost: React.FC = () => {
             required
           />
         </div>
-        <button type="submit" className="create-post-button">
-          수정 완료
-        </button>
       </form>
       <button className="back-to-community-button" onClick={() => navigate('/community')}>
         목록으로 돌아가기
+      </button>
+      <button type="submit" className="edit-post-button">
+      수정 완료
       </button>
     </div>
   );
