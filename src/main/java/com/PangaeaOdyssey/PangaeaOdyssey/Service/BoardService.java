@@ -42,6 +42,9 @@ public class BoardService {
     public BoardDTO getBoardById(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
+
+        board.setViews(board.getViews() + 1);
+        boardRepository.save(board);
         return BoardDTO.createBoardDTO(board); // DTO로 변환
     }
 

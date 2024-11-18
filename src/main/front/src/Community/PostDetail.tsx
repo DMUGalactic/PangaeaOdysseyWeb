@@ -21,14 +21,14 @@ const PostDetail: React.FC = () => {
     const fetchPost = async () => {
       const accessToken = localStorage.getItem('accessToken');
       const refreshToken = localStorage.getItem('refreshToken');
-
+/*
       if (!accessToken || !refreshToken) {
         console.error('토큰이 없습니다. 로그인 후 다시 시도하세요.');
         return;
       }
-
+*/
       try {
-        const response = await fetch(`/api/boards/${id}`, {
+        const response = await fetch(`/api/boards/board/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
