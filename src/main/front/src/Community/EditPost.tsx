@@ -60,7 +60,7 @@ const EditPost: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`/api/boards/update/${id}/${password}`, {
+      const response = await fetch(`/api/boards/update/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,6 +70,7 @@ const EditPost: React.FC = () => {
         body: JSON.stringify({
           title,
           content,
+          password
         }),
       });
 

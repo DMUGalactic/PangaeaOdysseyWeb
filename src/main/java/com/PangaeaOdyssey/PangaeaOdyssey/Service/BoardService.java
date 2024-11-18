@@ -52,12 +52,12 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDTO updateBoard(Long id, String password, BoardDTO updatedBoardDTO) {
+    public BoardDTO updateBoard(Long id, BoardDTO updatedBoardDTO) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
 
         // 비밀번호 검증
-        if (!board.getPassword().equals(password)) {
+        if (!board.getPassword().equals(board.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 맞지 않음");
         }
         board.patch(updatedBoardDTO);

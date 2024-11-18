@@ -45,11 +45,10 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
 
-    @PutMapping("/update/{id}/{password}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<BoardDTO> updateBoard(@PathVariable Long id,
-                                                @PathVariable String password,
                                                 @RequestBody BoardDTO updatedBoardDTO) {
-        BoardDTO boardDTO = boardService.updateBoard(id, password, updatedBoardDTO);
+        BoardDTO boardDTO = boardService.updateBoard(id, updatedBoardDTO);
         return ResponseEntity.status(HttpStatus.OK).body(boardDTO);
     }
 
