@@ -123,8 +123,8 @@ const EditPost: React.FC = () => {
           수정 완료
         </button>
       </form>
-      <button className="back-to-community-button" onClick={() => navigate('/community')}>
-        목록으로 돌아가기
+      <button className="back-to-community-button" onClick={() => navigate(`/community/${id}`)}>
+        돌아가기
       </button>
     </div>
   );

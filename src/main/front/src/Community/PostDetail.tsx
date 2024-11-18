@@ -104,7 +104,7 @@ const PostDetail: React.FC = () => {
           </div>
           <div className="button-wrapper">
             <button className="back-to-community-button" onClick={() => navigate('/community')}>
-              목록으로 돌아가기
+              돌아가기
             </button>
             <button className="edit-post-button" onClick={() => navigate(`/edit-post/${post.id}`)}>
               수정하기
