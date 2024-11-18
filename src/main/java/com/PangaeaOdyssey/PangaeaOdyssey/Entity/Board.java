@@ -19,7 +19,7 @@ public class Board extends BaseEntity{
     private String content;
     private String password; // 새로 추가된 비밀번호 필드
 
-    private int views = 0;
+    private double views = 0;
 
     public void patch(BoardDTO dto) {
         if(dto.getTitle() != null){
