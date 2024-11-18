@@ -62,7 +62,7 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
 
         // 비밀번호 검증
-        if (!board.getPassword().equals(board.getPassword())) {
+        if (!board.getPassword().equals(updatedBoardDTO.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 맞지 않음");
         }
         board.patch(updatedBoardDTO);

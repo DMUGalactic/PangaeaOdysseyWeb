@@ -21,7 +21,7 @@ const EditPost: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`/api/boards/${id}`, {
+        const response = await fetch(`/api/boards/board/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
