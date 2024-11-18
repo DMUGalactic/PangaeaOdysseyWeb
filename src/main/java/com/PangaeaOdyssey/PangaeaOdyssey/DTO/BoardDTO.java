@@ -11,13 +11,13 @@ public class BoardDTO {
     private Long id;
     private String title;
     private String content;
-    private int views;
+    private double views;
     private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // 생성자
-    public BoardDTO(Long id, String title, String content, int views, LocalDateTime createdAt, LocalDateTime updatedAt, String password) {
+    public BoardDTO(Long id, String title, String content, double views, LocalDateTime createdAt, LocalDateTime updatedAt, String password) {
         this.id = id;
         this.title = title;
         this.content = content;

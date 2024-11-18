@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Service
 public class BoardService {
@@ -40,6 +42,9 @@ public class BoardService {
     public BoardDTO getBoardById(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
+
+        board.setViews(board.getViews() + 0.5);
+        boardRepository.save(board);
         return BoardDTO.createBoardDTO(board); // DTO로 변환
     }
 
@@ -88,5 +93,18 @@ public class BoardService {
         boardRepository.deleteById(id);
         BoardDTO dto = BoardDTO.createBoardDTO(target);
         return dto;
+    }
+    public List<BoardDTO> searchByKeyword(String keyword) {
+        List<Board> boards = boardRepository.searchByKeyword(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
+    }
+    public List<BoardDTO> searchByTitle(String keyword) {
+        List<Board> boards = boardRepository.searchByTitle(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
+    }
+
+    public List<BoardDTO> searchByContent(String keyword) {
+        List<Board> boards = boardRepository.searchByContent(keyword);
+        return boards.stream().map(BoardDTO::createBoardDTO).collect(Collectors.toList());
     }
 }
