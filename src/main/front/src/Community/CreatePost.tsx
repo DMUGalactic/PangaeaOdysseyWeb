@@ -78,9 +78,11 @@ const CreatePost: React.FC = () => {
             required
           />
         </div>
-        <button type="submit" className="create-post-button">
-          작성 완료
-        </button>
+        <div className="button-wrapper">
+          <button type="submit" className="create-post-button">
+            작성 완료
+          </button>
+        </div>
       </form>
       <button className="back-to-community-button" onClick={() => navigate('/community')}>
         목록으로 돌아가기

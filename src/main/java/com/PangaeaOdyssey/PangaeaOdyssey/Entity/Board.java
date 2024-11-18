@@ -22,16 +22,13 @@ public class Board extends BaseEntity{
     private int views = 0;
 
     public void patch(BoardDTO dto) {
-        if (dto.getId() <= 0 || this.id != dto.getId()) {
-            throw new IllegalArgumentException("게시판 수정 실패! 잘못된 id가 입력됐습니다.");
-        }
         if(dto.getTitle() != null){
             this.title = dto.getTitle();
         }
         if(dto.getContent() != null){
             this.content = dto.getContent();
         }
-        if(dto.getPassword() != null){
+        if(this.password.equals(dto.getPassword())||dto.getPassword() != null){
             this.password = dto.getPassword();
         }
     }

@@ -52,7 +52,9 @@ const Community: React.FC = () => {
               {boards.map((board) => (
                 <tr key={board.id} className="board-item">
                   <td>{board.id}</td>
-                  <td><Link to={`/community/${board.id}`}>{board.title}</Link></td>
+                  <td>
+                    <Link to={`/community/${board.id}`}>{board.title}</Link> {/* 클릭 시 상세 페이지로 이동 */}
+                  </td>
                   <td>{board.authorNickname}</td>
                   <td>{board.views}</td>
                   <td>{new Date(board.createdAt).toLocaleDateString()}</td>
