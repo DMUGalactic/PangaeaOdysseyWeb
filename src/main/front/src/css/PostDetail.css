@@ -1,0 +1,81 @@
+.post-detail-container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 40px auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 스타일 */
+.post-detail-container h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* 게시글 정보 스타일 */
+.post-detail-container p {
+  margin: 10px 0;
+  color: #555;
+}
+
+/* 게시글 내용 스타일 */
+.post-content {
+  margin-top: 20px;
+  padding: 20px;
+  height: 280px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-wrapper {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.back-to-community-button,
+.edit-post-button {
+  padding: 10px 30px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 40px;
+}
+
+.delete-post-button {
+  padding: 14px 34px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 10px 0 40px;
+}
+
+.back-to-community-button {
+  background-color: #6c757d;
+}
+
+.back-to-community-button:hover {
+  background-color: #5a6268;
+}
+
+.edit-post-button {
+  background-color: #007bff;
+}
+
+.edit-post-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-post-button {
+  background-color: #dc3545;
+}
+
+.delete-post-button:hover {
+  background-color: #c82333;
+}

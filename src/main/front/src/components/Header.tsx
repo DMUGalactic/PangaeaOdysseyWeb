@@ -68,6 +68,9 @@ const Header: React.FC = () => {
             <Link to="/info">게임정보</Link>
           </li>
           <li>
+            <Link to="/community">커뮤니티</Link>
+          </li>
+          <li>
             <Link to="/download">다운로드</Link>
           </li>
           {!isLoggedIn ? (

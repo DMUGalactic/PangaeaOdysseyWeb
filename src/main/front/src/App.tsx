@@ -10,6 +10,11 @@ import Company from "./Company";
 import SignUp from "./SignUp";
 import AuthRedirect from "./AuthRedirect";
 
+import Community from "./Community/Community"
+import CreatePost from "./Community/CreatePost"
+import PostDetail from './Community/PostDetail';
+import EditPost from './Community/EditPost';
+
 import "./App.css"
 
 function App() {
@@ -20,10 +25,14 @@ function App() {
         <div className="content-container">
           <Routes>
             <Route path="/" element={<VideoBackground />} />
+            <Route path="/company" element={<Company />} />
             <Route path="/info" element={<Info />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/community/:id" element={<PostDetail />} />
+            <Route path="/edit-post/:id" element={<EditPost />} />
             <Route path="/download" element={<Download />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/company" element={<Company />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/auth-redirect" element={<AuthRedirect />} />
           </Routes>
