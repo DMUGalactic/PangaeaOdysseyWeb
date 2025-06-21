@@ -47,6 +47,13 @@ Pangaea Odyssey Web 프로젝트는 **사용자들이 게임을 단순히 플레
 ### 4. **기타 기능**
 - **JWT를 이용한 토큰 관리**: 사용자의 인증 정보를 **JWT 토큰**으로 관리하여 로그인 후 발생하는 요청에서 **토큰 검증**을 통해 사용자의 **인증 상태**를 확인합니다. 서버의 세션 저장소 없이 **효율적인 인증 관리**가 가능하였습니다.
 
+## ERD
+![image](https://github.com/user-attachments/assets/227410a8-72dd-4738-b527-d52f51d8d2aa)
+
 ## 🗺️ 시스템 아키텍처
 <img src="https://raw.githubusercontent.com/DMUGalactic/PangaeaOdysseyWeb/master/assets/projectarchtecture.png" alt="Pangaea Odyssey Web 시스템 아키텍처 다이어그램" style="max-width:100%; height:auto;">
+
+
+
+
 
